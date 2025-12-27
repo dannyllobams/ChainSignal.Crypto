@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/core/">
+    <Project Path="src/core/ChainSignal.Crypto.Core/ChainSignal.Crypto.Core.csproj" />
+  </Folder>
+  <Folder Name="/src/services/" />
+  <Folder Name="/src/services/AI/">
+    <Project Path="src/services/ChainSignal.Crypto.AI.API/ChainSignal.Crypto.AI.API.csproj" />
+    <Project Path="src/services/ChainSignal.Crypto.AI.Domain/ChainSignal.Crypto.AI.Domain.csproj" />
+    <Project Path="src/services/ChainSignal.Crypto.MarketInfo.CoinGecko/ChainSignal.Crypto.MarketInfo.CoinGecko.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,6 @@
+@ChainSignal.Crypto.AI.API_HostAddress = http://localhost:5274
+
+POST {{ChainSignal.Crypto.AI.API_HostAddress}}/api/report/
+Accept: application/json
+
+###

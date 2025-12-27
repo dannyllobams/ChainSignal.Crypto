@@ -42,6 +42,38 @@
                                 {{apiJson}}
                             """
                         )
+                    },
+                    {
+                        ("JsonRepair_CryptoDailyReport", 1),
+                        new PromptDefinition(
+                            Name: "JsonRepair_CryptoDailyReport",
+                            Version: 1,
+                            System: """
+                                You are a strict JSON repair assistant.
+                                Return ONLY valid JSON that matches the provided schema.
+                                Do not add commentary, markdown, or extra text.
+                                """,
+                            UserTemplate: """
+                                The JSON below is invalid or does not match the expected schema.
+
+                                Expected schema:
+                                {
+                                  "title": "string",
+                                  "dateUtc": "YYYY-MM-DD",
+                                  "summary": "string",
+                                  "keyTakeaways": ["string", ...],
+                                  "highlights": [
+                                    { "symbol": "string", "name": "string", "priceUsd": number, "change24hPct": number, "note": "string" }
+                                  ],
+                                  "disclaimer": "string"
+                                }
+
+                                Fix it. Return ONLY the corrected JSON.
+
+                                Invalid JSON:
+                                {{invalidJson}}
+                            """
+                        )
                     }
                 };
 

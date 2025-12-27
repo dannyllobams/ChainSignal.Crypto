@@ -5,6 +5,7 @@ using ChainSignal.Crypto.Core.Messages;
 using Cortex.Mediator.Commands;
 using FluentValidation.Results;
 using Microsoft.Extensions.AI;
+using System;
 using System.Text.Json;
 
 namespace ChainSignal.Crypto.AI.API.Application.Commands.GenerateDailyReport
@@ -39,14 +40,29 @@ namespace ChainSignal.Crypto.AI.API.Application.Commands.GenerateDailyReport
 
             var apiJson = JsonSerializer.Serialize(marketInfo);
 
-            var json = await CompleteAsync(_chatClient, prompt.System, Render(prompt.UserTemplate, apiJson), temperature: 0.2f, cancellationToken);
+            var json = await CompleteAsync(_chatClient, prompt.System, Render(prompt.UserTemplate, ("apiJson", apiJson)), temperature: 0.2f, cancellationToken);
 
             if (TryDeserialize(json, out MarketReport? report))
             {
                 return Result(report);
             }
+            else
+            {
+                var repairPrompt = _promptCatalog.Get("JsonRepair_CryptoDailyReport", 1);
 
-            this.AddError("LLM returned invalid JSON for CryptoDailyReport");
+                var fixedJson = await CompleteAsync(
+                    _chatClient,
+                    repairPrompt.System,
+                    Render(repairPrompt.UserTemplate, ("invalidJson", json)),
+                    temperature: 0.0f,
+                    cancellationToken);
+
+                if (TryDeserialize(fixedJson, out report))
+                    return Result(report);
+
+                this.AddError("LLM returned invalid JSON for CryptoDailyReport after one retry.");
+            }
+
             return Result<MarketReport>();
         }
 
@@ -84,7 +100,12 @@ namespace ChainSignal.Crypto.AI.API.Application.Commands.GenerateDailyReport
             }
         }
 
-        private static string Render(string template, string apiJson)
-            => template.Replace("{{apiJson}}", apiJson);
+    private static string Render(string template, params (string Key, string Value)[] values)
+    {
+        foreach (var (key, value) in values)
+            template = template.Replace($"{{{{{key}}}}}", value);
+
+        return template;
+    }
     }
 }

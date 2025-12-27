@@ -3,7 +3,6 @@ using ChainSignal.Crypto.Core.Mediator;
 using ChainSignal.Crypto.MarketInfo.CoinGecko.Configuration;
 using ChainSignal.Crypto.MarketInfo.CoinGecko.Services;
 using Cortex.Mediator.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 
 namespace ChainSignal.Crypto.AI.API.Configuration
 {
